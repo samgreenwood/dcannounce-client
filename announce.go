@@ -28,6 +28,8 @@ func main() {
 
 	args := os.Args[1:]
 
+	var ran = false;
+
 	if len(args) == 8 {
 		fmt.Println("SABnzbd mode");
 
@@ -45,18 +47,26 @@ func main() {
 
 			announce(site, announceUrl, filePath, tthPath);
 		}
+
+		ran = true;
 	}
 
 	if len(args) == 6 {
 		fmt.Println("Sickbeard mode");
 
-		var filePath string = args[0];
+		var arg string = args[0];
+		var filePath string = strings.Replace(arg, ",", "", -1);
 
 		announce(site, announceUrl, filePath, tthPath);
+
+		ran = true;
 	}
 
-	fmt.Println("Invalid number of arguments");
-	os.Exit(0);
+	if ran == false {
+		fmt.Println("Invalid number of arguments");
+		os.Exit(0);
+	}
+
 }
 
 func announce(site string, announceUrl string, filePath string, tthPath string) {
@@ -65,7 +75,7 @@ func announce(site string, announceUrl string, filePath string, tthPath string) 
 	var filename string = file.Name();
 	var size string = strconv.FormatInt(file.Size(), 10);
 	var tth string = calculateTth(tthPath, filePath);
-	var magnet string = fmt.Sprintf("magnet:?xt=urn:tree:tiger:%s&xl=%s&dn=%s", tth, size, filename);
+	var magnet string = fmt.Sprintf("magnet:?xt=urn:tree:tiger:%s&xl=%s&dn=%s", tth, size, url.QueryEscape(filename));
 
 	fmt.Println("Sitename: " + site);
 	fmt.Println("Filename: " + filename);
