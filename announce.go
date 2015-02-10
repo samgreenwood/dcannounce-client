@@ -19,6 +19,7 @@ func main() {
 	abspath, _ := filepath.Abs(dirname);
 
 	configFile := abspath + "/" + "announce.conf";
+	configFile = filepath.FromSlash(configFile);
 
 	c, err := config.ReadDefault(configFile);
 
@@ -49,6 +50,7 @@ func main() {
 
 			// then we work out the full path to the file
 			var filePath string = downloadPath + "/" + largestFile.Name();
+			filePath = filepath.FromSlash(filePath);
 
 			announce(site, announceUrl, filePath, tthPath);
 		}
