@@ -20,7 +20,12 @@ func main() {
 
 	configFile := abspath + "/" + "announce.conf";
 
-	c, _ := config.ReadDefault(configFile);
+	c, err := config.ReadDefault(configFile);
+
+	if err != nil {
+		fmt.Println("Error loading configuration file " + configFile);
+		os.Exit(0);
+	}
 
 	var site, _ = c.String("announce", "site");
 	var announceUrl, _ = c.String("announce", "url");
