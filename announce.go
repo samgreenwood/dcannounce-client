@@ -37,16 +37,34 @@ func main() {
 		if processingStatus == "0" {
 			fmt.Println("Processing completed successfully");
 
-			announce(site, announceUrl, downloadPath, tthPath);
+			// first we get the largest file in the directory as thats what we want to announce
+			var largestFile = getLargestFile(downloadPath);
+
+			// then we work out the full path to the file
+			var filePath string = downloadPath + "/" + largestFile.Name();
+
+			announce(site, announceUrl, filePath, tthPath);
 		}
 	}
+
+	if len(args) == 6 {
+		fmt.Println("Sickbeard mode");
+
+		var filePath string = args[0];
+
+		announce(site, announceUrl, filePath, tthPath);
+	}
+
+	fmt.Println("Invalid number of arguments");
+	os.Exit(0);
 }
 
-func announce(site string, announceUrl string, downloadPath string, tthPath string) {
-	var largestFile os.FileInfo = getLargestFile(downloadPath);
-	var filename string = largestFile.Name();
-	var size string = strconv.FormatInt(largestFile.Size(), 10);
-	var tth string = calculateTth(tthPath, downloadPath+"/"+largestFile.Name());
+func announce(site string, announceUrl string, filePath string, tthPath string) {
+	file, _ := os.Stat(filePath);
+
+	var filename string = file.Name();
+	var size string = strconv.FormatInt(file.Size(), 10);
+	var tth string = calculateTth(tthPath, filePath);
 	var magnet string = fmt.Sprintf("magnet:?xt=urn:tree:tiger:%s&xl=%s&dn=%s", tth, size, filename);
 
 	fmt.Println("Sitename: " + site);
