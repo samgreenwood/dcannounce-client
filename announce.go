@@ -6,10 +6,10 @@ import "fmt"
 import "io/ioutil"
 import "path"
 import "strconv"
-import "bytes"
 import "net/http"
 import "net/url"
 import "path/filepath"
+import "strings"
 import "github.com/robfig/config"
 
 func main() {
@@ -57,14 +57,22 @@ func announce(site string, announceUrl string, downloadPath string, tthPath stri
 
 	apiUrl := announceUrl;
 	resource := "/announce";
-	data := url.Values{"site": {site}, "filename": {filename}, "size": {size}, "tth": {tth}}
+
+	form := url.Values{}
+	form.Add("site", site)
+	form.Add("filename", filename)
+	form.Add("size", size)
+	form.Add("tth", tth)
 
 	u, _ := url.ParseRequestURI(apiUrl);
 	u.Path = resource;
 	urlStr := fmt.Sprintf("%v", u);
 
 	client := &http.Client{};
-	r, _ := http.NewRequest("POST", urlStr, bytes.NewBufferString(data.Encode()));
+
+	r, _ := http.NewRequest("POST", urlStr, strings.NewReader(form.Encode()));
+	r.Header.Add("Content-Type", "application/x-www-form-urlencoded")
+
 	client.Do(r);
 }
 
