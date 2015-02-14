@@ -69,6 +69,18 @@ func main() {
 		ran = true;
 	}
 
+	if len(args) == 1 {
+		fmt.Println("Filepath mode");
+
+		var arg string = args[0];
+		var filePath string = strings.Replace(arg, ",", "", -1);
+
+		announce(site, announceUrl, filePath, tthPath);
+
+		ran = true;
+
+	}
+
 	if ran == false {
 		fmt.Println("Invalid number of arguments");
 		os.Exit(0);
