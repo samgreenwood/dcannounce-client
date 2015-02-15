@@ -36,7 +36,7 @@ func main() {
 
 	var ran = false;
 
-	if len(args) == 8 {
+	if len(args) == 8 || len(args) == 7 {
 		fmt.Println("SABnzbd mode");
 
 		var downloadPath string = args[0];
